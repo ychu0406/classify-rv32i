@@ -169,18 +169,18 @@ classify:
     # mul a0, t0, t1 
     # FIXME: Replace 'mul' with your own implementation
     li a0, 0          # result
-    beqz t0, mul1_done
-    beqz t1, mul1_done
-mul1_loop:
+    beqz t0, done_mul_1
+    beqz t1, done_mul_1
+loop_mul_1:
     andi t2, t1, 1
-    beqz t2, mul1_skip
+    beqz t2, skip_mul_1
     add a0, a0, t0
-mul1_skip:
+skip_mul_1:
     slli t0, t0, 1
     srli t1, t1, 1
-    bnez t1, mul1_loop
+    bnez t1, loop_mul_1
 
-mul1_done:
+done_mul_1:
     slli a0, a0, 2
     jal malloc 
     beq a0, x0, error_malloc
@@ -220,17 +220,17 @@ mul1_done:
     # mul a1, t0, t1 # length of h array and set it as second argument
     # FIXME: Replace 'mul' with your own implementation
     li a1, 0 
-    beqz t0, mul2_done
-    beqz t1, mul2_done
-mul2_loop:
+    beqz t0, done_mul_2
+    beqz t1, done_mul_2
+loop_mul_2:
     andi t2, t1, 1
-    beqz t2, mul2_skip
+    beqz t2, skip_mul_2
     add a1, a1, t0
-mul2_skip:
+skip_mul_2:
     slli t0, t0, 1
     srli t1, t1, 1
-    bnez t1, mul2_loop
-mul2_done:
+    bnez t1, loop_mul_2
+done_mul_2:
     jal relu
     
     lw a0, 0(sp)
@@ -254,17 +254,17 @@ mul2_done:
     # mul a0, t0, t1 
     # FIXME: Replace 'mul' with your own implementation
     li a0, 0
-    beqz t0, mul3_done
-    beqz t1, mul3_done
-mul3_loop:
+    beqz t0, done_mul_3
+    beqz t1, done_mul_3
+loop_mul_3:
     andi t2, t1, 1
-    beqz t2, mul3_skip
+    beqz t2, skip_mul_3
     add a0, a0, t0
-mul3_skip:
+skip_mul_3:
     slli t0, t0, 1
     srli t1, t1, 1
-    bnez t1, mul3_loop
-mul3_done:
+    bnez t1, loop_mul_3
+done_mul_3:
     slli a0, a0, 2
     jal malloc 
     beq a0, x0, error_malloc

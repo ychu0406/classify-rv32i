@@ -8,22 +8,22 @@ ReLU(𝑎)=max(𝑎,0)
 Each element of the input array will be individually processed by setting negative values to 0. Since the matrix is stored as a 1D row-major vector, this function operates directly on the flattened array.
 ```assembly
     loop_start:
-        # TODO: Add your own implementation
-        beq t1, a1, lend
-        
-        slli t2, t1, 2       
-        add t3, a0, t2      
-        lw t4, 0(t3)        
-        
-        bge t4, zero, lskip  
-        sw zero, 0(t3)      
+    # TODO: Add your own implementation
+    beq t1, a1, lend
+    
+    slli t2, t1, 2       
+    add t3, a0, t2      
+    lw t4, 0(t3)        
+    
+    bge t4, zero, lskip  
+    sw zero, 0(t3)      
     
     lskip:
-        addi t1, t1, 1     
-        j loop_start       
+    addi t1, t1, 1     
+    j loop_start       
 
     lend:
-        jr ra
+    jr ra
 
 ```
 
@@ -35,21 +35,21 @@ Use `test_relu.s` to set up and run tests on your ReLU function. You can define 
 In `argmax.s`, implement the argmax function, which returns the index of the largest element in a given vector. If multiple elements share the largest value, return the smallest index. This function operates on 1D vectors.
 ```assembly
     start:
-        # TODO: Add your own implementation
-        beq t2, a1, comp
+    # TODO: Add your own implementation
+    beq t2, a1, comp
 
-        lw t3, 4(a0)       
-        ble t3, t0, skip   
-        mv t0, t3          
-        mv t1, t2          
+    lw t3, 4(a0)       
+    ble t3, t0, skip   
+    mv t0, t3          
+    mv t1, t2          
     skip:
-        addi a0, a0, 4     
-        addi t2, t2, 1     
-        j start
+    addi a0, a0, 4     
+    addi t2, t2, 1     
+    j start
 
     comp:
-        mv a0, t1
-        jr ra
+    mv a0, t1
+    jr ra
 ```
 
 
@@ -61,24 +61,24 @@ dot(𝑎,𝑏)=∑𝑖=0,𝑛−1(𝑎𝑖⋅𝑏𝑖)
 You will need to account for stride when accessing the vector elements. No overflow handling is required, so you will not need the mulh instruction.
 ```assembly
     start:
-        bge t1, a2, loop_end
-        # TODO: Add your own implementation
-        # first array
-        mul t2, t1, a3        
-        slli t2, t2, 2        # int : 4byte
-        add t2, a0, t2        
-        lw t3, 0(t2)          
-        # second array
-        mul t4, t1, a4        
-        slli t4, t4, 2       
-        add t4, a1, t4        
-        lw t5, 0(t4)          
-        # product and add to result
-        mul t6, t3, t5        
-        add t0, t0, t6        
-        
-        addi t1, t1, 1        
-        j start
+    bge t1, a2, loop_end
+    # TODO: Add your own implementation
+    # first array
+    mul t2, t1, a3        
+    slli t2, t2, 2        # int : 4byte
+    add t2, a0, t2        
+    lw t3, 0(t2)          
+    # second array
+    mul t4, t1, a4        
+    slli t4, t4, 2       
+    add t4, a1, t4        
+    lw t5, 0(t4)          
+    # product and add to result
+    mul t6, t3, t5        
+    add t0, t0, t6        
+    
+    addi t1, t1, 1        
+    j start
 ```
 Fill out `test_dot.s` using the provided starter code to test your dot product function. Below is an example:
 
@@ -92,12 +92,12 @@ dot(v0, v1) = 1 * 1 + 2 * 3 + 3 * 5 = 22
 In `matmul.s`, implement matrix multiplication, where:
 ```assembly
     inner_loop_end:
-        # TODO: Add your own implementation
-        slli t0, a2, 2        # cols0*4
-        add s3, s3, t0        
+    # TODO: Add your own implementation
+    slli t0, a2, 2        # cols0*4
+    add s3, s3, t0        
 
-        addi s0, s0, 1        
-        j outer_loop_start
+    addi s0, s0, 1        
+    j outer_loop_start
 ```
 ## Part B: File Operations and Main
 This section focuses on reading and writing matrices to files and building the main function to perform digit classification using the pretrained MNIST weights.
@@ -105,88 +105,88 @@ This section focuses on reading and writing matrices to files and building the m
 In `read_matrix.s`, implement the function to read a binary matrix from a file and load it into memory. 
 ```assembly
     # FIXME: Replace 'mul' with your own implementation
-        li s1, 0            # init
-        beq t1, zero, multiply_done  
-        beq t2, zero, multiply_done  
-        mv t3, t1 
+    li s1, 0            # init
+    beq t1, zero, done_mul  
+    beq t2, zero, done_mul  
+    mv t3, t1 
 
-        multiply_loop:
-        beq t3, zero, multiply_done
-        add s1, s1, t2
-        addi t3, t3, -1
-        j multiply_loop
+    loop_mul:
+    beq t3, zero, done_mul
+    add s1, s1, t2
+    addi t3, t3, -1
+    j loop_mul
 
-        multiply_done:
+    done_mul:
 ```
 
 ### Task 2: Write Matrix
 In `write_matrix.s`, implement the function to write a matrix to a binary file. 
 ```assembly
     # FIXME: Replace 'mul' with your own implementation
-        li s4, 0            # init
-        beq s2, zero, multiply_done
-        beq s3, zero, multiply_done
-        mv t0, s2
+    li s4, 0            # init
+    beq s2, zero, done_mul
+    beq s3, zero, done_mul
+    mv t0, s2
 
-        multiply_loop:
-        beq t0, zero, multiply_done
-        add s4, s4, s3
-        addi t0, t0, -1
-        j multiply_loop     
+    loop_mul:
+    beq t0, zero, done_mul
+    add s4, s4, s3
+    addi t0, t0, -1
+    j loop_mul     
 
-        multiply_done:
+    done_mul:
 ```
 
 ### Task 3: Classification
 In `classify.s`, bring everything together to classify an input using two weight matrices and the ReLU and ArgMax functions. 
 - line 170
 ```assembly
-    # FIXME: Replace 'mul' with your own implementation
-        li a0, 0          # result
-        beqz t0, mul1_done
-        beqz t1, mul1_done
-    mul1_loop:
-        andi t2, t1, 1
-        beqz t2, mul1_skip
-        add a0, a0, t0
-    mul1_skip:
-        slli t0, t0, 1
-        srli t1, t1, 1
-        bnez t1, mul1_loop
+# FIXME: Replace 'mul' with your own implementation
+    li a0, 0          # result
+    beqz t0, done_mul_1
+    beqz t1, done_mul_1
+loop_mul_1:
+    andi t2, t1, 1
+    beqz t2, skip_mul_1
+    add a0, a0, t0
+skip_mul_1:
+    slli t0, t0, 1
+    srli t1, t1, 1
+    bnez t1, loop_mul_1
 
-    mul1_done:
+done_mul_1:
 ```
 - line 221
 ```assembly
-    # FIXME: Replace 'mul' with your own implementation
-        li a1, 0 
-        beqz t0, mul2_done
-        beqz t1, mul2_done
-    mul2_loop:
-        andi t2, t1, 1
-        beqz t2, mul2_skip
-        add a1, a1, t0
-    mul2_skip:
-        slli t0, t0, 1
-        srli t1, t1, 1
-        bnez t1, mul2_loop
-    mul2_done:
+ # FIXME: Replace 'mul' with your own implementation
+    li a1, 0 
+    beqz t0, done_mul_2
+    beqz t1, done_mul_2
+loop_mul_2:
+    andi t2, t1, 1
+    beqz t2, skip_mul_2
+    add a1, a1, t0
+skip_mul_2:
+    slli t0, t0, 1
+    srli t1, t1, 1
+    bnez t1, loop_mul_2
+done_mul_2:
 ```
 line 255
 ```assembly
-    # FIXME: Replace 'mul' with your own implementation
-        li a0, 0
-        beqz t0, mul3_done
-        beqz t1, mul3_done
-    mul3_loop:
-        andi t2, t1, 1
-        beqz t2, mul3_skip
-        add a0, a0, t0
-    mul3_skip:
-        slli t0, t0, 1
-        srli t1, t1, 1
-        bnez t1, mul3_loop
-    mul3_done:
+# FIXME: Replace 'mul' with your own implementation
+    li a0, 0
+    beqz t0, done_mul_3
+    beqz t1, done_mul_3
+loop_mul_3:
+    andi t2, t1, 1
+    beqz t2, skip_mul_3
+    add a0, a0, t0
+skip_mul_3:
+    slli t0, t0, 1
+    srli t1, t1, 1
+    bnez t1, loop_mul_3
+done_mul_3:
 ```
 ## Results
 % ./test.sh all        

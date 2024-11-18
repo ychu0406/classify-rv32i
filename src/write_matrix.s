@@ -64,17 +64,17 @@ write_matrix:
     # mul s4, s2, s3   # s4 = total elements
     # FIXME: Replace 'mul' with your own implementation
     li s4, 0            # init
-    beq s2, zero, done
-    beq s3, zero, done
+    beq s2, zero, done_mul
+    beq s3, zero, done_mul
     mv t0, s2
 
-    multiply_loop:
-    beq t0, zero, done
+    loop_mul:
+    beq t0, zero, done_mul
     add s4, s4, s3
     addi t0, t0, -1
-    j multiply_loop     
+    j loop_mul     
 
-    done:
+    done_mul:
     
     # write matrix data to file
     mv a0, s0
